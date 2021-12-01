@@ -30,8 +30,8 @@ const prependFiles = (nodeResolutionPaths, prependContent) => {
       fs.writeFileSync(
         path,
         `${banner}
-       ${prependContent}
-       ${contents}`
+${prependContent}
+${contents}`
       );
     } else {
       console.log(` - Skipping '${nodeResolutionPath}', already patched...`);
@@ -43,12 +43,18 @@ const prependFiles = (nodeResolutionPaths, prependContent) => {
 prependFiles(
   "blob-stream",
   `
-  if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
+  if (window.global === undefined) {
     window.global = window;
+  }
+  if (window.process === undefined) {
     window.process = require('process');
+  }
+  if (window.EventEmitter === undefined) {
     window.EventEmitter = require('events');
   }
-  `
+}
+`
 );
 
 // Buffer a go go.
